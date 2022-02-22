@@ -71,7 +71,6 @@ val copyResourceToClasses by tasks.creating(Copy::class) {
 //val coremod = ""
 
 fun net.minecraftforge.gradle.common.util.RunConfig.commonConfigure() {
-    workingDirectory(project.file("run"))
     args("--noCoreSearch")
 
     property("forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP")
@@ -82,10 +81,12 @@ fun net.minecraftforge.gradle.common.util.RunConfig.commonConfigure() {
 }
 
 val runClient = minecraft.runs.create("client") {
+    workingDirectory(project.file("run"))
     commonConfigure()
 }
 
 val runServer = minecraft.runs.create("server") {
+    workingDirectory(project.file("run/server"))
     commonConfigure()
 }
 
