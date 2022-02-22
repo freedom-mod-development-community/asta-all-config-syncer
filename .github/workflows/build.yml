@@ -43,4 +43,3 @@ jobs:
         with:
           version: 1.12.2-14.23.5.2855
           mod_jar: ./build/libs/asta-all-config-syncer-${{ steps.prepare_run_server.outputs.version_name }}.jar
-          mods_dir: mods
