@@ -68,14 +68,14 @@ val copyResourceToClasses by tasks.creating(Copy::class) {
     from(tasks.processResources.get().destinationDir)
 }
 
-//val coremod = ""
+val coremod = "xyz.fmdc.astaAllConfigSyncer.DebugCoreMod"
 
 fun net.minecraftforge.gradle.common.util.RunConfig.commonConfigure() {
     args("--noCoreSearch")
 
     property("forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP")
     property("forge.logging.console.level", "debug")
-    //property("fml.coreMods.load", coremod)
+    property("fml.coreMods.load", coremod)
     property("legacy.debugClassLoading", "true")
     //property("legacy.debugClassLoadingSave", "true")
 }
