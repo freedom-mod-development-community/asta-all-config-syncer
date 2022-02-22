@@ -1,0 +1,20 @@
+# Copyright (c) 2022 anatawa12 and other contributors
+# This file is part of *All Config Syncer, released under MIT License
+# See LICENSE at https://github.com/freedom-mod-development-community/asta-all-config-syncer for more details
+
+name: License Header Check
+
+on:
+  push: {}
+
+jobs:
+  license-header-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: viperproject/check-license-header@v1
+        with:
+          path: .
+          config: .github/license-check/header-check.json
+          strict: true

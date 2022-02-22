@@ -1,0 +1,40 @@
+[
+  {
+    "include": [
+      "{buildSrc,src}/**/*.java",
+      "**/*.kts"
+    ],
+    "license": "./.github/license-check/header-triple-slash.txt"
+  },
+  {
+    "include": [
+      "**/*.yml",
+      "**/*.cfg",
+      "**/*.properties",
+      "**/*.lang"
+    ],
+    "exclude": [
+      "gradle/wrapper/*"
+    ],
+    "license": "./.github/license-check/header-hash.txt"
+  },
+  {
+    "__comment": "ignored files:",
+    "include": [
+      "**/*.md",
+      "**/*.png",
+      "**/*.json",
+      "gradle/wrapper/*",
+      "gradlew",
+      "gradlew.bat",
+      "LICENSE",
+      "src/main/resources/*-LICENSE.txt",
+      "src/main/resources/*-NOTICE.txt",
+      "src/main/resources/LICENSE.txt",
+      "src/main/resources/mcmod.info",
+      "src/main/resources/pack.mcmeta",
+      "src/main/resources/README.txt",
+      "src/main/resources/sai-LICENSE.txt"
+    ]
+  }
+]

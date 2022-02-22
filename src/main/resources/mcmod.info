@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "asta-all-config-syncer",
+    "name": "*Alll Config Syncer",
+    "description": "The mod to get configuration of (Mine|Dig|Cut)AllSMP from server",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["anatawa12"],
+    "credits": "(c) anatawa12 and other contributors. released under MIT license",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

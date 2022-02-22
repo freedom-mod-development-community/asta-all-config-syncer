@@ -1,0 +1,103 @@
+# Copyright (c) 2022 anatawa12 and other contributors
+# This file is part of *All Config Syncer, released under MIT License
+# See LICENSE at https://github.com/freedom-mod-development-community/asta-all-config-syncer for more details
+
+name: Release
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: deployment
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PUSH_KEY }}
+      - uses: anatawa12/something-releaser@v2
+      - run: set-git-user anatawa12-bot
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - name: update version name
+        run: |
+          # set version name in properties file
+          set-version "$(version-set-channel "$(get-version)" stable)"
+
+          if [ "$GITHUB_REF_NAME" != "master" ]; then
+              echo "release is not allowd for $GITHUB_REF_NAME"
+              exit 255
+          fi
+
+          gh-export-variable VERSION_NAME "$(get-version)"
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+
+      - name: compute output information
+        run: |
+          asset_name="asta-all-config-syncer-$VERSION_NAME.jar"
+          asset_path="./build/libs/$asset_name"
+          gh-export-variable ASSET_PATH "$asset_path"
+          gh-export-variable ASSET_NAME "$asset_name"
+
+      - name: commit
+        run: |
+          changelog_tag_pattern='^[\d.]+$'
+          changelog_file_path='CHANGELOG.md'
+
+          # make release notes commit
+          generate-changelog \
+            -v "$VERSION_NAME" \
+            --tag-pattern "$changelog_tag_pattern" \
+            -o "$changelog_file_path"
+
+          release_note_path=$(mktemp)
+          {
+            generate-changelog --unreleased-only -v "$VERSION_NAME" --tag-pattern "$changelog_tag_pattern" --stdout
+          } >> "$release_note_path"
+          gh-export-variable RELEASE_NOTE_PATH "$release_note_path"
+
+          # commit to add updated changelog
+          git commit -am "$VERSION_NAME"
+          git tag "$VERSION_NAME"
+
+      - name: Build
+        uses: eskatos/gradle-command-action@v2
+        with:
+          arguments: build
+
+      - name: push releases
+        run: |
+          # push
+          git push
+          git push origin "$VERSION_NAME"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: jar
+          path: ${{ env.ASSET_PATH }}
+          retention-days: 30
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$VERSION_NAME" --notes-file "$RELEASE_NOTE_PATH"
+          gh release upload "$VERSION_NAME" "$ASSET_PATH"
+
+      - name: create next version commit releases
+        id: publish_releases
+        run: |
+          git reset --hard HEAD
+
+          version="$(get-version)"
+          version="$(version-next "$version")"
+          set-version "$(version-set-channel "$version" snapshot)"
+
+          git commit -am "prepare for next version: $version"
+          git push
