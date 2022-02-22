@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          token: ${{ secrets.PUSH_KEY }}
+          token: ${{ secrets.ACTIONS_PAT }}
       - uses: anatawa12/something-releaser@v2
       - run: set-git-user anatawa12-bot
 
